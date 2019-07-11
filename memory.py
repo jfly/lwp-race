@@ -49,7 +49,7 @@ _.flatMap([1, 2], duplicate);
         create_file("/b.js", """\
 import _ from 'lodash';
 let b = _.omit({'magickey': 1}, 'magickey');
-console.log("This should be empty: " + JSON.stringify(b));
+console.log(b);
 """)
 
     def chmod(self, path, mode):
