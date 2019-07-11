@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from __future__ import print_function, absolute_import, division
 
-import os
+import os.path
 from time import sleep
 import logging
 
@@ -44,8 +44,7 @@ import _ from 'lodash';
 function duplicate(n) {
   return [n, n];
 }
-let a = _.flatMap([1, 2], duplicate);
-console.log(a);
+_.flatMap([1, 2], duplicate);
 """)
         create_file("/b.js", """\
 import _ from 'lodash';
@@ -108,9 +107,18 @@ console.log("This should be empty: " + JSON.stringify(b));
         return self.fd
 
     def read(self, path, size, offset, fh):
-        if path == "/a.js" and os.environ.get("SLOW_LOAD_A_DOT_JS"):
-            sleep(1)
+        sleep(self._delay_before_reading(path))
         return self.data[path][offset:offset + size]
+
+    def _delay_before_reading(self, path):
+        assert path.startswith("/")
+        delay_file = os.path.join("/tmp/read-delays", path[1:])
+        if not os.path.isfile(delay_file):
+            return 0
+
+        with open(delay_file, "r") as f:
+            delay = int(f.read().strip())
+        return delay
 
     def readdir(self, path, fh):
         return ['.', '..'] + [x[1:] for x in self.files if x != '/']
