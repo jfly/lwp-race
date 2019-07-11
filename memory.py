@@ -184,5 +184,5 @@ if __name__ == '__main__':
     parser.add_argument('mount')
     args = parser.parse_args()
 
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.WARNING)
     fuse = FUSE(Memory(), args.mount, foreground=True, allow_other=True, nonempty=True)

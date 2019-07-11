@@ -1,0 +1,7 @@
+version: '3'
+services:
+  src_fuse:
+    build: .
+    redis:
+      image: "redis:alpine"
+
